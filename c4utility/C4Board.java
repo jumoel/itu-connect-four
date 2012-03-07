@@ -15,6 +15,14 @@ public class C4Board {
 		this.board = new int[width][height];
 	}
 	
+	public C4Board(int[][] data) {
+		this.width = data.length;
+		this.height = data[0].length;
+		this.board = data;
+	}
+	
+	public int[][] getData() { return board; }
+	
 	public int getWidth() { return width; }
 	
 	public int getHeight() { return height; }

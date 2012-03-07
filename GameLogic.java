@@ -6,11 +6,11 @@ public class GameLogic implements IGameLogic {
     private int height = 0;
     private int playerId;
 	
-	private C4Board board;
+	private c4utility.C4Board board;
 	private IBehavior behavior;
 	
     public GameLogic() {		
-		behavior = new StupidIncreasor();
+		behavior = new MiniMax(playerId);
 	}
 	
     public void initializeGame(int width, int height, int playerId) {
@@ -18,7 +18,7 @@ public class GameLogic implements IGameLogic {
         this.height = height;
         this.playerId = playerId;
 		
-		board = new C4Board(width, height);
+		board = new c4utility.C4Board(width, height);
     }
 	
     public Winner gameFinished() {
