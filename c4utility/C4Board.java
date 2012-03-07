@@ -1,3 +1,5 @@
+package c4utility;
+
 public class C4Board {
 	private int width;
 	private int height;
@@ -12,6 +14,10 @@ public class C4Board {
 		
 		this.board = new int[width][height];
 	}
+	
+	public int getWidth() { return width; }
+	
+	public int getHeight() { return height; }
 	
 	public boolean canPutInColumn(int column) {
 		return !columnIsFull(column);
@@ -99,7 +105,7 @@ public class C4Board {
 	public String toString() {
 		String boardtext = "";
 		
-		for (int row = height - 1; row > 0; row--) {
+		for (int row = height - 1; row >= 0; row--) {
 			for (int column = 0; column < width; column++) {
 				int tile = board[column][row];
 				

@@ -1,3 +1,5 @@
+import behaviors.*;
+import c4utility.*;
 
 public class GameLogic implements IGameLogic {
     private int width = 0;
@@ -5,11 +7,10 @@ public class GameLogic implements IGameLogic {
     private int playerId;
 	
 	private C4Board board;
+	private IBehavior behavior;
 	
-	private int nextMove;
-    
-    public GameLogic() {
-		nextMove = 0;
+    public GameLogic() {		
+		behavior = new StupidIncreasor();
 	}
 	
     public void initializeGame(int width, int height, int playerId) {
@@ -45,11 +46,6 @@ public class GameLogic implements IGameLogic {
     }
 
     public int decideNextMove() {
-        int thisMove = nextMove;
-		
-		nextMove = (nextMove + 1) % width;
-		
-		return thisMove;
+        return behavior.nextMove(board);
     }
-
 }
