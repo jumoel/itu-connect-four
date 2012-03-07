@@ -1,2 +1,2 @@
 #!/bin/sh
-javac *.java && java ShowGame human GameLogic
+java ShowGame human GameLogic
