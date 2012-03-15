@@ -1,2 +1,3 @@
 *.class
 docs/
+.DS_Store
