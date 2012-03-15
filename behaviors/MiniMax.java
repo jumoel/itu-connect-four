@@ -8,6 +8,8 @@ public class MiniMax implements IBehavior {
 	private static int TIE_VALUE = 10;
 	private static int MAX_DEPTH = 5;
 	
+	private enum Direction { HORIZONTAL, VERTICAL, DIAGONAL_UP, DIAGONAL_DOWN }
+	
 	private class Action {
 		public int action;
 		public int value;
@@ -83,7 +85,87 @@ public class MiniMax implements IBehavior {
 		
 		return actions.getMax();
 	}
-	
+	/*
+	private int heurestic2(C4Board board, int playerId) {
+		int[][] data = copy(board.getData());
+		
+		int heuresticvalue = 0;
+		
+		for (Direction d : Direction.values()) {
+			int f_start = 0, f_end = 0;
+			int s_start = 0, s_end = 0;
+			
+			int col_diff = 0;
+			int row_diff = 0;
+			
+			switch (d) {
+			case HORIZONTAL:
+				f_start = 0;
+				f_end = board.getHeight();
+				s_start = 0;
+				s_end = board.getWidth() - 3;
+				col_diff = 1;
+				row_diff = 0;
+				break;
+			case VERTICAL:
+				f_start = 0;
+				f_end = board.getWidth();
+				s_start = 0;
+				s_end = board.getHeight() - 3;
+				col_diff = 0;
+				row_diff = 1;
+				break;
+			case DIAGONAL_UP:
+				f_start = 0;
+				f_end = board.getWidth() - 3;
+				s_start = 0;
+				s_end = board.getHeight() - 3;
+				col_diff = 1;
+				row_diff = 1;
+				break;
+			default: // DIAGONAL_DOWN
+				f_start = 0;
+				f_end = board.getWidth() - 3;
+				s_start = 3;
+				s_end = board.getHeight();
+				col_diff = 1;
+				row_diff = -1;
+				break;
+			}
+			
+			// TODO: Initialize start and end variables properly
+			
+			for (int f_iter = f_start; f_iter < f_end; f_iter++) {
+				for (int s_iter = s_start; s_iter < s_end; s_iter++) {
+					int in_a_row = 0;
+					int max = 0;
+					int startc = -1;
+					int startr = -1;
+					
+					for (int offset = 0; offset < 4; offset++) {
+						// TODO: determine value based on direction
+						int colval = 0;
+						int rowval = 0;
+						int value = data[colval][rowval];
+						
+						if (value == playerId) {
+							in_a_row += 1;
+							
+							if (in_a_row > max) {
+								max = in_a_row;
+								
+								startc = colval - max*col_diff;
+								startr = rowval - max*row_diff;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return 0;
+	}
+	*/
 	private int heurestic(C4Board board, int playerId) {
 		int[][] data = copy(board.getData());
 		
