@@ -25,14 +25,17 @@ public class GameLogic implements IGameLogic {
         int winner = board.getWinner();
 		
 		if (winner == 1) {
+			System.out.println(board);
 			return Winner.PLAYER1;
 		}
 		
 		if (winner == 2) {
+			System.out.println(board);
 			return Winner.PLAYER2;
 		}
 		
-		if (winner == -1) {
+		if (winner == board.TIE) {
+			System.out.println(board);
 			return Winner.TIE;
 		}
 		
@@ -42,7 +45,6 @@ public class GameLogic implements IGameLogic {
 
     public void insertCoin(int column, int playerId) {
 		board.putIn(column, playerId);
-		System.out.println(board);
     }
 
     public int decideNextMove() {
