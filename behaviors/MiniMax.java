@@ -14,6 +14,10 @@ public class MiniMax implements IBehavior {
 		}
 		
 		public Action() { }
+		
+		public String toString() {
+			return "<A: " + action + ", V: " + value + ">";
+		}
 	}
 	
 	private int playerId;
@@ -30,9 +34,9 @@ public class MiniMax implements IBehavior {
 	}
 	
 	private float gameValue(int winner) {
-		if (winner ==  1) return 1.0f;
-		if (winner == -1) return 0.5f;
-		if (winner ==  2) return -1.0f;
+		if (winner == 1) return 1.0f;
+		if (winner == 0) return 0.0f;
+		if (winner == 2) return -1.0f;
 		
 		return Float.NaN;
 	}
@@ -46,7 +50,8 @@ public class MiniMax implements IBehavior {
 	
 	private float maxValue(C4Board state) {
 		int terminalvalue = state.getWinner();
-		if (terminalvalue != -1) {
+		
+		if (!Float.isNaN(terminalvalue)) {
 			return gameValue(terminalvalue);
 		}
 		
@@ -61,7 +66,8 @@ public class MiniMax implements IBehavior {
 	
 	private float minValue(C4Board state) {
 		int terminalvalue = state.getWinner();
-		if (terminalvalue != -1) {
+		
+		if (!Float.isNaN(terminalvalue)) {
 			return gameValue(terminalvalue);
 		}
 		
