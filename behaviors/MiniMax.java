@@ -188,11 +188,8 @@ public class MiniMax implements IBehavior {
 						if (in_a_row > max) {
 							max = in_a_row;
 							
-							// If this was the first in a row, save the starting pos
-							if (in_a_row == 1) {
-								startc = column + offset;
-								startr = row;
-							}
+							startc = column + offset - (max - 1);
+							startr = row;
 						}
 					}
 					else
@@ -207,7 +204,7 @@ public class MiniMax implements IBehavior {
 				// An open sequence is a sequence, that has the possibility to be a sequence of four in a row
 				
 				for (int offset = 0; offset <= 4 - max; offset++) {
-					if (startc - offset + 3 >= data.length) { continue; }
+					if (startc - offset + 3 >= board.getWidth()) { continue; }
 					if (startc - offset < 0) { break; }
 
 					boolean seq = true;
@@ -233,6 +230,8 @@ public class MiniMax implements IBehavior {
 			for (int row = 0; row < board.getHeight() - 3; row++) {
 				int in_a_row = 0;
 				int max = 0;
+				int startc = -1;
+				int startr = -1;
 				
 				for (int offset = 0; offset < 4; offset++) {
 					int value = data[column][row + offset];
@@ -242,6 +241,9 @@ public class MiniMax implements IBehavior {
 						in_a_row += 1;
 						if (in_a_row > max) {
 							max = in_a_row;
+							
+							startc = column;
+							startr = row + offset - (max - 1);
 						}
 					}
 					else
@@ -249,8 +251,29 @@ public class MiniMax implements IBehavior {
 						in_a_row = 0;
 					}
 				}
+
 				
-				heuresticvalue += deltaheurestic(max);
+				boolean isopen = false;
+				
+				for (int offset = 0; offset <= 4 - max; offset++) {
+					if (startr - offset + 3 >= board.getHeight()) { continue; }
+					if (startr - offset < 0) { break; }
+
+					boolean seq = true;
+					for (int i = 0; i < 4; i++) {
+						int v = data[column][startr - offset + i]; 
+						seq = seq && (v == 0 || v == playerId);
+						
+						if (!seq) { break; }
+					}
+					
+					if (seq) { isopen = true; break; }
+				}
+			
+				// Only add values for open sequences or sequences of four
+				if (isopen || max == 4) {
+					heuresticvalue += deltaheurestic(max);
+				}
 			}
 		}
 		
@@ -259,6 +282,8 @@ public class MiniMax implements IBehavior {
 			for (int row = 0; row < board.getHeight() - 3; row++) {
 				int in_a_row = 0;
 				int max = 0;
+				int startc = -1;
+				int startr = -1;
 				
 				for (int offset = 0; offset < 4; offset++) {
 					int value = data[column + offset][row + offset];
@@ -268,6 +293,9 @@ public class MiniMax implements IBehavior {
 						in_a_row += 1;
 						if (in_a_row > max) {
 							max = in_a_row;
+							
+							startc = column + offset - (max - 1);
+							startr = row + offset - (max - 1);
 						}
 					}
 					else
@@ -282,6 +310,8 @@ public class MiniMax implements IBehavior {
 			for (int row = 3; row < board.getHeight(); row++) {
 				int in_a_row = 0;
 				int max = 0;
+				int startc = -1;
+				int startr = -1;
 				
 				for (int offset = 0; offset < 4; offset++) {
 					int value = data[column + offset][row - offset];
@@ -291,6 +321,9 @@ public class MiniMax implements IBehavior {
 						in_a_row += 1;
 						if (in_a_row > max) {
 							max = in_a_row;
+							
+							startc = column + offset - (max - 1);
+							startr = row - offset + (max - 1);
 						}
 					}
 					else
