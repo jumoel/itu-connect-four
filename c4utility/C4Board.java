@@ -4,6 +4,9 @@ public class C4Board {
 	private int width;
 	private int height;
 	
+	public static int TIE = 0;
+	public static int NOWINNER = -1;
+	
 	private static final int WINDISCS = 4;
 	
 	private int[][] board;
@@ -31,18 +34,19 @@ public class C4Board {
 		return !columnIsFull(column);
 	}
 	
-	public void putIn(int column, int playerId) {
+	public int putIn(int column, int playerId) {
 		if (!canPutInColumn(column)) {
-			System.out.println("Aww :(\n");
-			return;
+			return -1;
 		}
 		
 		for (int row = 0; row < height; row++) {
 			if (this.board[column][row] == 0) {
 				this.board[column][row] = playerId;
-				return;
+				return row;
 			}
 		}
+		
+		return -1;
 	}
 	
 	public boolean columnIsEmpty(int column) {
@@ -65,7 +69,7 @@ public class C4Board {
 	
 	public int getWinner() {
 		if (isFull()) {
-			return -1;
+			return TIE;
 		}
 		
 		// Vertical
@@ -99,7 +103,7 @@ public class C4Board {
 			}
 			
 			// Decreasing slope
-			for (int row = height - 4; row < height; row++) {
+			for (int row = height - 3; row < height; row++) {
 				int tile = board[column][row];
 				if (tile != 0 && tile == board[column + 1][row - 1] && tile == board[column + 2][row - 2] && tile == board[column + 3][row - 3]) {
 					return tile;
@@ -107,7 +111,7 @@ public class C4Board {
 			}
 		}
 		
-		return 0;
+		return NOWINNER;
 	}
 	
 	public String toString() {
