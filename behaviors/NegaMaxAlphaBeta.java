@@ -4,9 +4,9 @@ import c4utility.*;
 import java.util.ArrayList;
 
 @SuppressWarnings("serial")
-public class MiniMax implements IBehavior {
-	private static int TIE_VALUE = 100;
-	private static int MAX_DEPTH = 7;
+public class NegaMaxAlphaBeta implements IBehavior {
+	private static int TIE_VALUE = 10;
+	private static int MAX_DEPTH =5;
 	
 	private enum Direction { HORIZONTAL, VERTICAL, DIAGONAL_UP, DIAGONAL_DOWN }
 	
@@ -64,7 +64,7 @@ public class MiniMax implements IBehavior {
 	
 	private int playerId;
 	
-	public MiniMax(int playerId) {
+	public NegaMaxAlphaBeta(int playerId) {
 		this.playerId = playerId;
 	}
 	
@@ -78,14 +78,16 @@ public class MiniMax implements IBehavior {
 		ActionList actions = new ActionList();
 		
 		for(int move : validMoves) {
-			actions.add(new Action(move, minimaxValue(board, move, otherPlayerId(playerId), MAX_DEPTH)));
+			actions.add(new Action(move, minimaxValue(board, move, otherPlayerId(playerId), MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, 1)));
 		}
 		
-		//System.out.println(actions);
+		System.out.println(actions);
 		
 		return actions.getMax();
 	}
 	
+	// A whole lot of code duplication in this function.
+	// It could be reduced a lot, but I decided that (features and less time coding) > (pretty code).
 	private int heurestic(C4Board board, int playerId) {
 		int[][] data = copy(board.getData());
 		
@@ -262,46 +264,16 @@ public class MiniMax implements IBehavior {
 	private int deltaheurestic(int max) {
 		int h = (int)Math.pow(max, max);
 		
-		if (max == 4) { h = (int)Math.pow(h, max); }
+		//if (max == 4) { h = (int)Math.pow(h, max); }
 		
 		return h;
 	}
 	
-	// Makes a coin in the middle of the board be worth more than a coin in the corne
-	private int heurestic2(int column, int row)
-	{
-		int h = 0;
+	private int minimaxValue(C4Board board, int move, int currentPlayer, int depth, int alpha, int beta, int color) {
+		int a = alpha, b = beta;
 		
-		switch (column) {
-		case 3:
-			h++;
-		case 2:
-		case 4:
-			h++;
-		case 1:
-		case 5:
-			h++;
-		default:
-			h++;		
-		}
-		
-		switch (row) {
-		case 2:
-		case 3:
-			h++;
-		case 1:
-		case 4:
-			h++;
-		default:
-			h++;
-		}
-		
-		return (int)Math.pow(h, 3);
-	}
-	
-	private int minimaxValue(C4Board board, int move, int currentPlayer, int depth) {
 		C4Board newstate = new C4Board(copy(board.getData()));
-		int resultingrow = newstate.putIn(move, currentPlayer);
+		newstate.putIn(move, currentPlayer);
 		
 		int gamestate = newstate.getWinner();
 
@@ -318,19 +290,25 @@ public class MiniMax implements IBehavior {
 		}
 		
 		if (depth == 0) {
-			int heurestic = heurestic(newstate, currentPlayer);
-			heurestic += heurestic2(move, resultingrow) * 10;
-			return heurestic;
+			return heurestic(newstate, currentPlayer);
 		}
 		
 		int value = Integer.MAX_VALUE;
 		
 		MoveList opponentMoves = findMoves(newstate);
 		for (int opponentmove : opponentMoves) {
-			value = Math.min(value, -minimaxValue(newstate, opponentmove, opponent, depth - 1));
+			value = -minimaxValue(newstate, opponentmove, opponent, depth - 1, -a, -b, -color);
+			
+			if (value >= b) {
+				return value;
+			}
+			
+			if (value >= a) {
+				a = value;
+			}
 		}
 		
-		return value;
+		return a;
 	}
 	
 	

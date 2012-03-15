@@ -22,21 +22,21 @@ public class GameLogic implements IGameLogic {
     }
 	
     public Winner gameFinished() {
+    	if (board.isFull())
+    	{
+    		return Winner.TIE;
+    	}
+    	
         int winner = board.getWinner();
 		
 		if (winner == 1) {
-			System.out.println(board);
+			//System.out.println(board);
 			return Winner.PLAYER1;
 		}
 		
 		if (winner == 2) {
-			System.out.println(board);
+			//System.out.println(board);
 			return Winner.PLAYER2;
-		}
-		
-		if (winner == board.TIE) {
-			System.out.println(board);
-			return Winner.TIE;
 		}
 		
         return Winner.NOT_FINISHED;
